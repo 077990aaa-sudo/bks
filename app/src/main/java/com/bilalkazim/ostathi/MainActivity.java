@@ -22,6 +22,9 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+
 public class MainActivity extends Activity {
     private WebView webView;
     private ValueCallback<Uri[]> filePathCallback;
@@ -72,6 +75,7 @@ public class MainActivity extends Activity {
                 view.evaluateJavascript(
                         "window.print=function(){if(window.AndroidBridge){AndroidBridge.printCurrentPage();}};",
                         null);
+                injectImportFix(view);
             }
         });
 
@@ -127,6 +131,22 @@ public class MainActivity extends Activity {
             webView.loadUrl("file:///android_asset/index.html");
         } else {
             webView.restoreState(savedInstanceState);
+        }
+    }
+
+    private void injectImportFix(WebView view) {
+        try (InputStream input = getAssets().open("import-fix.js")) {
+            byte[] bytes = new byte[input.available()];
+            int offset = 0;
+            while (offset < bytes.length) {
+                int read = input.read(bytes, offset, bytes.length - offset);
+                if (read < 0) break;
+                offset += read;
+            }
+            String script = new String(bytes, 0, offset, StandardCharsets.UTF_8);
+            view.evaluateJavascript(script, null);
+        } catch (Exception e) {
+            Toast.makeText(this, "تعذر تحميل تحسينات الاستيراد", Toast.LENGTH_SHORT).show();
         }
     }
 
