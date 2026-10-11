@@ -1,0 +1,16 @@
+أستاذي — البناء عبر GitHub Actions
+منشئ البرنامج: أ. بلال كاظم الزركاني
+
+طريقة الحصول على APK بدون Android Studio:
+1) أنشئ مستودع GitHub جديد.
+2) ارفع محتويات مجلد OstathiAndroid إلى جذر المستودع.
+3) افتح تبويب Actions في GitHub.
+4) اختر Build Android APK.
+5) اضغط Run workflow.
+6) انتظر اكتمال البناء باللون الأخضر.
+7) افتح عملية البناء، وانزل إلى Artifacts.
+8) حمّل Ostathi-APK.
+9) فك الضغط وستجد app-debug.apk.
+
+ملاحظة:
+الـ APK الناتج Debug للتثبيت والتجربة. للنشر على Google Play نحتاج توقيع Release منفصل.
