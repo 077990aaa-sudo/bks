@@ -739,6 +739,34 @@ function migrateState(x){
   }else{
     x.students.forEach(s=>{ if(s.section===undefined)s.section=''; });
   }
+
+  // Restore the original demo students once after this update, without touching real user data.
+  if(!x.demoStudentsRestoredV1){
+    let g1=x.groups.find(g=>g.name==='الثالث المتوسط — تجريبي');
+    let g2=x.groups.find(g=>g.name==='الثاني المتوسط — تجريبي');
+    if(!g1){
+      g1={id:uid(),name:'الثالث المتوسط — تجريبي',sourceFile:'بيانات تجريبية',createdAt:new Date().toISOString()};
+      x.groups.push(g1);
+    }
+    if(!g2){
+      g2={id:uid(),name:'الثاني المتوسط — تجريبي',sourceFile:'بيانات تجريبية',createdAt:new Date().toISOString()};
+      x.groups.push(g2);
+    }
+
+    const demoStudents=[
+      {name:'أحمد علي',cls:'الثالث المتوسط',section:'أ',subject:'الرياضيات',guardian:'علي حسن',phone:'07700000001',note:'',groupId:g1.id},
+      {name:'زينب محمد',cls:'الثالث المتوسط',section:'أ',subject:'الرياضيات',guardian:'محمد كريم',phone:'07700000002',note:'',groupId:g1.id},
+      {name:'حسين قاسم',cls:'الثاني المتوسط',section:'ب',subject:'الرياضيات',guardian:'قاسم جواد',phone:'07700000003',note:'',groupId:g2.id},
+      {name:'مريم عباس',cls:'الثاني المتوسط',section:'ب',subject:'الرياضيات',guardian:'عباس سالم',phone:'07700000004',note:'',groupId:g2.id}
+    ];
+
+    demoStudents.forEach(d=>{
+      const exists=x.students.some(s=>s.name===d.name && s.phone===d.phone);
+      if(!exists)x.students.push({id:uid(),...d});
+    });
+    x.demoStudentsRestoredV1=true;
+  }
+
   return x;
 }
 function load(){
